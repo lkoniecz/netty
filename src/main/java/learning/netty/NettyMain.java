@@ -17,4 +17,8 @@ public class NettyMain {
         System.out.println("branch1");
     }
 
+    public static void branch2() {
+        System.out.println("branch2");
+    }
+
 }
