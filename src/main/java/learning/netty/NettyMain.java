@@ -8,4 +8,8 @@ public class NettyMain {
     public static void methodOne() {
         System.out.println("method one");
     }
+	
+    public static void methodTwo() {
+        System.out.println("methodTwo");
+    }
 }
