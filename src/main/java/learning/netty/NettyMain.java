@@ -12,4 +12,9 @@ public class NettyMain {
     public static void methodTwo() {
         System.out.println("methodTwo");
     }
+
+    public static void branch1() {
+        System.out.println("branch1");
+    }
+
 }
