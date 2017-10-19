@@ -44,3 +44,6 @@ atlassian-ide-plugin.xml
 
 # Target directory
 target/
+
+# Gradle
+.gradle/
