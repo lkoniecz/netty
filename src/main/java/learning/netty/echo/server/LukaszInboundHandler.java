@@ -1,15 +1,16 @@
 package learning.netty.echo.server;
 
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+
+import java.util.Date;
 
 public class LukaszInboundHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        System.out.println("Server received: " + msg);
+        System.out.println("LukaszInboundHandler server received: " + msg + " for channel " + ctx.channel());
+        ctx.write(msg);
     }
 
     @Override

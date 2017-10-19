@@ -28,8 +28,10 @@ public class EchoServer {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline()
+                                    .addLast(new LukaszOutboundHandler())
                                     .addLast(new EchoServerHandler())
-                                    .addLast(new LukaszInboundHandler()); //
+                                    .addLast(new LukaszInboundHandler());
+
                         }
                     });
 
