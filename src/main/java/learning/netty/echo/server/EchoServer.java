@@ -7,6 +7,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import learning.netty.decoder.ToStringDecoder;
 
 import java.net.InetSocketAddress;
 
@@ -28,13 +29,13 @@ public class EchoServer {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline()
+                                    .addLast(new LastOutboundHandler())
                                     .addLast(new LukaszOutboundHandler())
                                     .addLast(new EchoServerHandler())
+                                    .addLast(new ToStringDecoder())
                                     .addLast(new LukaszInboundHandler());
-
                         }
                     });
-
             ChannelFuture f = b.bind().sync(); //5
             System.out.println(EchoServer.class.getName() + " started and listen on " + f.channel().localAddress()); //6 and 7
             f.channel().closeFuture().sync(); //8
