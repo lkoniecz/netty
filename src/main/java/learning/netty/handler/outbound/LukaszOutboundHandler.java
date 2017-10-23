@@ -1,4 +1,4 @@
-package learning.netty.echo.server;
+package learning.netty.handler.outbound;
 
 import io.netty.channel.*;
 

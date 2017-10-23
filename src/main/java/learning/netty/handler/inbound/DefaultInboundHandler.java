@@ -1,14 +1,14 @@
-package learning.netty.echo.server;
+package learning.netty.handler.inbound;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
 
-public class EchoServerHandler extends ChannelInboundHandlerAdapter {
+public class DefaultInboundHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        System.out.println("EchoServerHandler server received: " + msg + " for channel " + ctx.channel());
+        System.out.println("DefaultInboundHandler server received: " + msg + " for channel " + ctx.channel());
         ctx.fireChannelRead(msg);
     }
 

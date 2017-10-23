@@ -7,7 +7,12 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import learning.netty.decoder.ToStringDecoder;
+import learning.netty.decoder.ByteToUserDecoder;
+import learning.netty.encoder.UserToByteEncoder;
+import learning.netty.handler.inbound.DefaultInboundHandler;
+import learning.netty.handler.inbound.UserInboundHandler;
+import learning.netty.handler.outbound.LastOutboundHandler;
+import learning.netty.handler.outbound.LukaszOutboundHandler;
 
 import java.net.InetSocketAddress;
 
@@ -30,10 +35,11 @@ public class EchoServer {
                         public void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline()
                                     .addLast(new LastOutboundHandler())
+                                    .addLast(new UserToByteEncoder())
                                     .addLast(new LukaszOutboundHandler())
-                                    .addLast(new EchoServerHandler())
-                                    .addLast(new ToStringDecoder())
-                                    .addLast(new LukaszInboundHandler());
+                                    .addLast(new DefaultInboundHandler())
+                                    .addLast(new ByteToUserDecoder())
+                                    .addLast(new UserInboundHandler());
                         }
                     });
             ChannelFuture f = b.bind().sync(); //5
