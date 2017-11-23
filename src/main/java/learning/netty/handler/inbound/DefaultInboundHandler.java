@@ -9,6 +9,8 @@ public class DefaultInboundHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         System.out.println("DefaultInboundHandler server received: " + msg + " for channel " + ctx.channel());
+        System.out.println("In event loop " + ctx.channel().eventLoop().inEventLoop());
+        ctx.channel().eventLoop().execute(() -> System.out.println("SIEEEEMAAAA"));
         ctx.fireChannelRead(msg);
     }
 

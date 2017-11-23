@@ -11,7 +11,7 @@ public class LastOutboundHandler extends ChannelOutboundHandlerAdapter {
         System.out.println("LastOutboundHandler server received: " + msg + " for channel " + ctx.channel());
         ctx.writeAndFlush(msg).addListener(future -> {
             if (future.isSuccess()) {
-                System.out.println("Data written succesfully");
+                System.out.println("Data written successfully");
             } else {
                 System.out.println("Data failed to write:");
                 future.cause().printStackTrace();
