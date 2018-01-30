@@ -1,7 +1,6 @@
-package rxjava;
+package rxjava.utils;
 
 public class Tweet {
-
     private String message;
 
     public Tweet(String message) {
@@ -14,5 +13,10 @@ public class Tweet {
 
     public String getText() {
         return message;
+    }
+
+    @Override
+    public String toString() {
+        return "Tweet{ message='" + message + '\'' +'}';
     }
 }
