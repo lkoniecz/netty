@@ -13,7 +13,7 @@ public class UserInboundHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
-        System.out.println("channelReadComplete");
+       // System.out.println("channelReadComplete");
         //ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE); //3
     }
 

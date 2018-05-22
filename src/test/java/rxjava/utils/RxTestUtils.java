@@ -2,9 +2,11 @@ package rxjava.utils;
 
 import rxjava.utils.Person.Gender;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class RxTestUtils {
 
@@ -13,7 +15,11 @@ public class RxTestUtils {
     }
 
     public static void log(Object msg) {
-        System.out.println("LOGGING: " + Thread.currentThread().getName() + ": " + msg);
+        System.out.println(Instant.now()+ " : " + Thread.currentThread().getName() + " : " + msg);
+    }
+
+    public static void log(Object msg, Throwable e) {
+        System.err.println(Instant.now()+ " : " + Thread.currentThread().getName() + " : " + msg + " " + e.getMessage());
     }
 
     public static List<Person> generatePoepleList() {
@@ -23,5 +29,13 @@ public class RxTestUtils {
         people.add(new Person("Stefan", "Pitol", LocalDate.of(2001, 01, 20), Gender.MALE));
         people.add(new Person("Jadzia", "Jadziowa", LocalDate.of(1954, 11, 15), Gender.FEMALE));
         return people;
+    }
+
+    public static void sleep(int timeout, TimeUnit unit) {
+        try {
+            unit.sleep(timeout);
+        } catch (InterruptedException ignored) {
+            //intentionally ignored
+        }
     }
  }

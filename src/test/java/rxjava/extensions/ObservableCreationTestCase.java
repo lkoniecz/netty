@@ -1,15 +1,22 @@
 package rxjava.extensions;
 
 import org.junit.jupiter.api.Test;
+import rx.Emitter;
 import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
 import rx.Subscription;
+import rx.functions.Action1;
+import rx.observables.SyncOnSubscribe;
 import rx.subscriptions.Subscriptions;
 import rxjava.utils.RxTestUtils;
 import rxjava.utils.Tweet;
 import rxjava.utils.WatchableObserver;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -39,7 +46,7 @@ public class ObservableCreationTestCase {
     }
 
     @Test
-    public void observableRangeShouldCallOnNextCorrectTimes() {
+    public void observableRangeShouldCallOnNextCorrectNumberOfTimes() {
         WatchableObserver<Integer> observer = new WatchableObserver<>();
         List<Integer> values = IntStream.range(0, 10).boxed().collect(Collectors.toList());
         Observable<Integer> observable = Observable.from(values);
@@ -151,11 +158,21 @@ public class ObservableCreationTestCase {
     }
 
     @Test
-    public void testDupa() {
-        Observable<String> observable = Observable.create(subscriber -> {
-           subscriber.onNext("huj dupa");
-           subscriber.onError(new Exception("jeeebut"));
+    void hujdupa() {
+        Observable<Integer> obs = Observable.create(subscriber -> {
+            System.out.println("create");
+            subscriber.onNext(10);
+            subscriber.onNext(20);
+            subscriber.onCompleted();
         });
-        observable.subscribe(str -> System.out.println(str), error -> System.out.println(error));
+
+        obs.subscribe(System.out::println);
+        obs.subscribe(System.out::println);
+        obs.subscribe(System.out::println);
+        obs.subscribe(System.out::println);
+        obs.subscribe(System.out::println);
+        obs.subscribe(System.out::println);
+        obs.subscribe(System.out::println);
+        obs.subscribe(System.out::println);
     }
 }

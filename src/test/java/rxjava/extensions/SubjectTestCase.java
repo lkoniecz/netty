@@ -1,10 +1,12 @@
 package rxjava.extensions;
 
 import org.junit.jupiter.api.Test;
+import rx.functions.Action1;
 import rx.subjects.AsyncSubject;
 import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
 import rx.subjects.ReplaySubject;
+import rxjava.utils.RxTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,7 @@ public class SubjectTestCase {
         subject.onNext("first message");
 
         subject.subscribe(item -> {
+            RxTestUtils.log(item);
             messagesReceived.incrementAndGet();
         });
 
@@ -33,7 +36,26 @@ public class SubjectTestCase {
     }
 
     @Test
-    public void asyncSubjectShouldSendLastValueEmitedBeforeOnComplete() {
+    public void subjectShouldDropSubsequentOnErrorNotificationsAfterCallingOnError() {
+        AtomicInteger errorsReceived = new AtomicInteger(0);
+        PublishSubject<String> subject = PublishSubject.create();
+
+        subject.subscribe(
+                s -> RxTestUtils.log(s),
+                throwable -> {
+                    RxTestUtils.log("Got error", throwable);
+                    errorsReceived.incrementAndGet();
+                }
+        );
+
+        subject.onError(new Exception("first error"));
+        subject.onError(new Exception("second error"));
+
+        assertEquals(1, errorsReceived.get());
+    }
+
+    @Test
+    public void asyncSubjectShouldSendLastValueEmittedBeforeOnComplete() {
         final AtomicInteger lastReceivedValue = new AtomicInteger(0);
         AsyncSubject<Integer> subject = AsyncSubject.create();
         subject.onNext(30);
@@ -48,14 +70,12 @@ public class SubjectTestCase {
     }
 
     @Test
-    public void behavioralSubjectShouldSendMostRecentlyEmmitedValueBeforeSubscription() {
+    public void behavioralSubjectShouldSendMostRecentlyEmittedValueBeforeSubscription() {
         List<Integer> messages = new ArrayList();
         BehaviorSubject<Integer> subject = BehaviorSubject.create();
         subject.onNext(30);
 
-        subject.subscribe(number -> {
-            messages.add(number);
-        });
+        subject.subscribe(number -> messages.add(number));
 
         subject.onNext(31);
         subject.onCompleted();
@@ -73,9 +93,7 @@ public class SubjectTestCase {
         subject.onNext(29);
         subject.onNext(30);
 
-        subject.subscribe(number -> {
-            messages.add(number);
-        });
+        subject.subscribe(number -> messages.add(number));
 
         subject.onNext(31);
         subject.onCompleted();
