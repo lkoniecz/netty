@@ -15,7 +15,9 @@ public class FilterTestCase {
     @Test
     public void filterTesting() {
         List<Person> people = RxTestUtils.generatePoepleList();
-        Observable<Person> peopleObs = Observable.from(people).filter(person -> person.getGender() == Gender.MALE);
+        Observable<Person> peopleObs = Observable
+                .from(people)
+                .filter(person -> person.getGender() == Gender.MALE);
 
         List<Person> receivedPeople = new ArrayList<>();
         peopleObs.subscribe(person -> receivedPeople.add(person));

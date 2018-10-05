@@ -33,6 +33,7 @@ public class RxTestUtils {
 
     public static void sleep(int timeout, TimeUnit unit) {
         try {
+            log("sleeping for: " + timeout + " " + unit.name());
             unit.sleep(timeout);
         } catch (InterruptedException ignored) {
             //intentionally ignored

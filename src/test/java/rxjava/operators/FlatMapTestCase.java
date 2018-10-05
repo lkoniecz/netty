@@ -3,6 +3,7 @@ package rxjava.operators;
 import org.junit.jupiter.api.Test;
 import rx.Observable;
 import rx.functions.Func1;
+import rxjava.utils.Person;
 import rxjava.utils.model.highway.CarPhoto;
 import rxjava.utils.model.highway.LicensePlate;
 import rxjava.utils.model.shop.Customer;
@@ -15,9 +16,6 @@ import java.util.stream.IntStream;
 
 public class FlatMapTestCase {
 
-    /**
-     *
-     */
     @Test
     public void flatMapTesting() {
         Observable<String> obs = Observable.just("lukasz")
@@ -95,5 +93,27 @@ public class FlatMapTestCase {
     @Test
     public void flatMapTakesFunctionsAsArguments() {
 
+    }
+
+    private Person createPerson(String firstName, String lastName) {
+        Person person = new Person();
+        person.setFirstName(firstName);
+        person.setLastName(lastName);
+        return person;
+    }
+
+    @Test
+    public void tryingToUnderstandFlatMap() {
+        Observable<Person> person = Observable.fromCallable(() -> createPerson("lukasz", "konieczny"));
+
+        Observable<Person> observable = person.flatMap(new Func1<Person, Observable<Person>>() {
+            @Override
+            public Observable<Person> call(Person person) {
+                Person p = new Person();
+                p.setFirstName(person.getFirstName());
+                p.setLastName(person.getLastName());
+                return Observable.just(p);
+            }
+        });
     }
 }

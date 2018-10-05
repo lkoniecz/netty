@@ -3,11 +3,14 @@ package rxjava.operators;
 import org.junit.jupiter.api.Test;
 import rx.Observable;
 import rx.functions.Func2;
+import rxjava.utils.RxTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -65,5 +68,30 @@ public class ZipTestCase {
 
         zippedObs.subscribe(event -> assertEquals(70, event.intValue()));
         latch.await();
+    }
+
+    @Test
+    public void zipTestCase() {
+        Observable<Integer> firstStream = Observable.create(subscriber -> {
+            IntStream.range(1, 10).forEach(element -> {
+                RxTestUtils.log("emitting: " + element);
+                subscriber.onNext(element);
+            });
+            subscriber.onCompleted();
+        });
+
+        Observable<Integer> secondStream = Observable.create(subscriber -> {
+            IntStream.range(11, 20).forEach(element -> {
+                RxTestUtils.log("emitting: " + element);
+                subscriber.onNext(element);
+            });
+            subscriber.onCompleted();
+        });
+
+        final Observable<Integer> delay = secondStream.delay(2, TimeUnit.SECONDS);
+
+        Observable.zip(firstStream, delay,(integer, integer2) -> integer + " : " + integer2)
+                .toBlocking()
+                .subscribe(System.out::println);
     }
 }

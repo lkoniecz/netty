@@ -6,7 +6,7 @@ import java.util.Date;
 public class Person {
     public enum Gender {
         MALE,
-        FEMALE;
+        FEMALE
     }
 
     private String firstName;

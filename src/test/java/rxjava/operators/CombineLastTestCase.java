@@ -20,9 +20,10 @@ public class CombineLastTestCase {
     void combineLatestShouldEmitAllValuesSimultaneouslyTakingLatestValueFromSlowStream() throws InterruptedException {
         ValueHolder<Long, Long> holder = ValueHolder.newInstance();
         AtomicLong repeatedValues = new AtomicLong(0);
+        Observable<Long> slow = Observable.interval(17, TimeUnit.MILLISECONDS);
+        Observable<Long> fast = Observable.interval(10, TimeUnit.MILLISECONDS);
         Observable.combineLatest(
-                interval(17, TimeUnit.MILLISECONDS),
-                interval(10, TimeUnit.MILLISECONDS),
+                slow, fast,
                 (s, f) -> {
                     if (holder.getFirstValue() == s) {
                         repeatedValues.incrementAndGet();
@@ -39,7 +40,7 @@ public class CombineLastTestCase {
     }
 
     @Test
-    void combineLatestFromShouldPairSlowerStreamEventsWithLatestFromFaster() throws InterruptedException {
+    void withLatestFromShouldPairSlowerStreamEventsWithLatestFromFaster() throws InterruptedException {
         ValueHolder<Long, Long> holder = ValueHolder.newInstance().withDefaultValues(0L, 0L);
         AtomicLong numberOfGaps = new AtomicLong(0); //some values from faster stream were missed
 
@@ -84,5 +85,23 @@ public class CombineLastTestCase {
         assertTrue(holder.getFirstValue() > holder.getSecondValue());
     }
 
+    @Test
+    public void combineLatestTest() {
+        Observable<String> fast = interval(10, TimeUnit.MILLISECONDS).map(x -> "F" + x);
+        Observable<String> slow = interval(17, TimeUnit.MILLISECONDS).map(x -> "S" + x);
+        Observable
+                .combineLatest(slow, fast, (s, f) -> f + " : " + s)
+                .toBlocking()
+                .forEach(System.out::println);
+    }
 
+    @Test
+    public void withLatestFromTest() {
+        Observable<String> fast = interval(10, TimeUnit.MILLISECONDS).map(x -> "F" + x);
+        Observable<String> slow = interval(17, TimeUnit.MILLISECONDS).map(x -> "S" + x);
+        slow
+                .withLatestFrom(fast, (s, f) -> s + ":" + f)
+                .toBlocking()
+                .forEach(System.out::println);
+    }
 }

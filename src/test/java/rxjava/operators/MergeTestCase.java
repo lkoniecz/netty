@@ -54,4 +54,18 @@ public class MergeTestCase {
                 }, () -> System.out.println("completed"));
         assertEquals(1, errorsReceived.get());
     }
+
+    @Test
+    public void mergeTesting() {
+        Observable<String> obs1 = Observable
+                .just("lukasz1")
+                .delay(400, TimeUnit.MILLISECONDS);
+        Observable<String> obs2 = Observable.just("lukasz2");
+
+        Observable
+                .merge(obs1, obs2)
+                .toBlocking()
+                .subscribe(System.out::println);
+
+    }
 }
