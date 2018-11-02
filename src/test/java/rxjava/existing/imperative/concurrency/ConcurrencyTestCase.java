@@ -2,6 +2,8 @@ package rxjava.existing.imperative.concurrency;
 
 import org.junit.jupiter.api.Test;
 import rx.Observable;
+import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rxjava.utils.RxTestUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -98,6 +100,21 @@ public class ConcurrencyTestCase {
         Thread.sleep(10);
     }
 
+
+    private Observable<Integer> doubleIt(int value) {
+        return Observable.just(value * 2);
+    }
+
+    @Test
+    public void flatMapTest() {
+        Observable<Observable<Integer>> map = Observable
+                .range(1, 100)
+                .map(this::doubleIt);
+
+        Observable<Integer> integerObservable = map
+                .flatMap(item -> item);
+    }
+
     @Test
     public void fullyAsynchronousTestCase() throws InterruptedException {
         Observable<Flight> flight = rxLookupFlight("LOT 783")
@@ -105,12 +122,11 @@ public class ConcurrencyTestCase {
         Observable<Passenger> passenger = rxFindPassenger(42)
                 .subscribeOn(Schedulers.io());
 
-
-        Observable<Ticket> ticket = flight
+        Observable<Ticket> ticketObservable = flight
                 .zipWith(passenger, (Flight f, Passenger p) -> Pair.of(f, p))
                 .flatMap(pair -> rxBookTicket(pair.getLeft(), pair.getRight()));
-        //Observable<Ticket> ticket = flight.zipWith(passenger, (f, p) -> rxBookTicket(f, p)); // this is blocking
-        //ticket.subscribe(this::sendEmail);
-        Thread.sleep(10);
+
+        ticketObservable.subscribe(this::sendEmail);
+        Thread.sleep(100);
     }
 }
